@@ -1,0 +1,43 @@
+import { Injectable } from '@angular/core';
+
+declare var fin: any; // Declare OpenFin API (to avoid TypeScript errors)
+
+@Injectable({
+  providedIn: 'root',
+})
+export class OpenfinService {
+  constructor() {}
+
+  // Initialize OpenFin and create a window
+  createOpenFinWindow() {
+    if (fin) {
+      const app = new fin.desktop.Application({
+        name: 'AngularApp',
+        uuid: 'angular-app-uuid',
+        url: 'http://localhost:4200', // Your Angular app's URL
+        autoShow: true,
+      });
+
+      app.run();
+    } else {
+      console.error('OpenFin is not available.');
+    }
+  }
+}
+
+
+import { Component, OnInit } from '@angular/core';
+import { OpenfinService } from './openfin.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent implements OnInit {
+  constructor(private openfinService: OpenfinService) {}
+
+  ngOnInit() {
+    this.openfinService.createOpenFinWindow();
+  }
+}
